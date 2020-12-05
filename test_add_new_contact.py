@@ -15,13 +15,36 @@ class TestAddNewContact(unittest.TestCase):
 
     def test_add_new_contact(self):
         wd = self.wd
+        # open home page
         wd.get("http://localhost/addressbook/index.php")
-        wd.find_element_by_name("user").click()
+        self.login(wd)
+        self.add_contact(wd)
+        self.submit_contact(wd)
+        self.go_to_home_page(wd)
+        self.check_added_contact(wd)
+        self.logout(wd)
+
+    def logout(self, wd):
+        # logout
+        wd.find_element_by_link_text("Logout").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//input[@value='Login']").click()
+
+    def check_added_contact(self, wd):
+        # check added contact
+        wd.find_element_by_xpath("//td[contains(text(), 'firstname')]")
+
+    def go_to_home_page(self, wd):
+        # go home page
+        wd.find_element_by_link_text("home").click()
+
+    def submit_contact(self, wd):
+        # submit add contact
+        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        wd.find_element_by_xpath("//div[contains(text(), 'Information entered into address book.')]")
+
+    def add_contact(self, wd):
+        # open add contact page
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -72,13 +95,15 @@ class TestAddNewContact(unittest.TestCase):
         wd.find_element_by_name("phone2").send_keys("home")
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys("note")
-        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
-        wd.find_element_by_xpath("//div[contains(text(), 'Information entered into address book.')]")
-        wd.find_element_by_link_text("home").click()
-        wd.find_element_by_xpath("//td[contains(text(), 'firstname')]")
-        wd.find_element_by_link_text("Logout").click()
+
+    def login(self, wd):
+        #  login
+        wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def is_element_present(self, how, what):
         try:
