@@ -24,7 +24,7 @@ class TestAddNewContact(unittest.TestCase):
                                      work="work",
                                      fax="fax", homepage="homepage", bday="4", bmonth="January", byear="1990",
                                      title="title", adr="adr", email1="email1@ads.com", email2="email2@ads.com", email3="email3@ads.com",
-                                     aday="5", amonth="January", ayear="1990", adr2="123", phone2="123", note="note", photo=os.getcwd() + "/photo.jpeg"))
+                                     aday="5", amonth="January", ayear="1990", adr2="123", phone2="123", note="note", photo=os.getcwd()+"/photo.jpeg"))
         self.submit_contact(wd)
         self.go_to_home_page(wd)
         self.check_added_contact(wd)
@@ -61,7 +61,10 @@ class TestAddNewContact(unittest.TestCase):
         wd.find_element_by_name("lastname").send_keys(contact.last_name)
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys(contact.nickname)
-        wd.find_element_by_name("photo").send_keys(contact.photo)
+        if contact.photo is None:
+            pass
+        else:
+            wd.find_element_by_name("photo").send_keys(contact.photo)
         wd.find_element_by_name("title").click()
         wd.find_element_by_name("title").clear()
         wd.find_element_by_name("title").send_keys(contact.title)
@@ -112,6 +115,7 @@ class TestAddNewContact(unittest.TestCase):
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def is_element_present(self, how, what):
+
         try:
             self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e:
