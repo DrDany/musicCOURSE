@@ -1,70 +1,19 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest
+import pytest
+
+from application import Application
 from group import Group
 
-class AddGroupTest(unittest.TestCase):
-    def setUp(self):
-        self.wb = webdriver.Firefox()
-        self.wb.implicitly_wait(30)
-    
-    def test_add_group(self):
 
-        self.login(username="admin", password="secret")
-        self.add_group(Group(group_name="999", group_header="333", group_footer="333"))
-        self.check_added_group(Group(group_name="999", group_header="333", group_footer="333"))
-        self.logout()
+@pytest.fixture
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
-    def logout(self):
-        wd = self.wb
-        wd.find_element_by_link_text("Logout").click()
 
-    def check_added_group(self, group):
-        wd = self.wb
-        self.open_page()
-        wd.find_element_by_xpath("//input[@title='Select ({})']".format(group.group_name))
-
-    def add_group(self, group):
-        wd = self.wb
-        wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_name("new").click()
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.group_name)
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.group_header)
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.group_footer)
-        wd.find_element_by_name("submit").click()
-
-    def login(self, username, password):
-        self.open_page()
-        wd = self.wb
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-
-    def open_page(self):
-        wd = self.wb
-        wd.get("http://localhost/addressbook/group.php")
-
-    def is_element_present(self, how, what):
-        try: self.wb.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wb.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-
-    def tearDown(self):
-        self.wb.quit()
-
-if __name__ == "__main__":
-    unittest.main()
+def test_add_group(app):
+    app.login(username="admin", password="secret")
+    app.add_group(Group(group_name="tst123111111", group_header="333", group_footer="333"))
+    app.check_added_group(Group(group_name="999", group_header="333", group_footer="333"))
+    app.logout()
