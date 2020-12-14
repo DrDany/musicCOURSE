@@ -11,21 +11,23 @@ class AddGroupTest(unittest.TestCase):
         self.wb.implicitly_wait(30)
     
     def test_add_group(self):
-        wd = self.wb
-        self.open_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.add_group(wd, Group(group_name="999", group_header="333", group_footer="333"))
-        self.open_page(wd)
-        self.check_added_group(wd, Group(group_name="999", group_header="333", group_footer="333"))
-        self.logout(wd)
 
-    def logout(self, wd):
+        self.login(username="admin", password="secret")
+        self.add_group(Group(group_name="999", group_header="333", group_footer="333"))
+        self.check_added_group(Group(group_name="999", group_header="333", group_footer="333"))
+        self.logout()
+
+    def logout(self):
+        wd = self.wb
         wd.find_element_by_link_text("Logout").click()
 
-    def check_added_group(self, wd, group):
+    def check_added_group(self, group):
+        wd = self.wb
+        self.open_page()
         wd.find_element_by_xpath("//input[@title='Select ({})']".format(group.group_name))
 
-    def add_group(self, wd, group):
+    def add_group(self, group):
+        wd = self.wb
         wd.find_element_by_link_text("groups").click()
         wd.find_element_by_name("new").click()
         wd.find_element_by_name("group_name").click()
@@ -37,7 +39,9 @@ class AddGroupTest(unittest.TestCase):
         wd.find_element_by_name("group_footer").send_keys(group.group_footer)
         wd.find_element_by_name("submit").click()
 
-    def login(self, wd, username, password):
+    def login(self, username, password):
+        self.open_page()
+        wd = self.wb
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -45,7 +49,8 @@ class AddGroupTest(unittest.TestCase):
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
-    def open_page(self, wd):
+    def open_page(self):
+        wd = self.wb
         wd.get("http://localhost/addressbook/group.php")
 
     def is_element_present(self, how, what):
