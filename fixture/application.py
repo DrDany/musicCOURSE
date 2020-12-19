@@ -10,7 +10,7 @@ class Application:
     def __init__(self):
         self.wb = webdriver.Firefox()
         self.wb.maximize_window()
-        self.wb.implicitly_wait(30)
+        self.wb.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
@@ -18,7 +18,7 @@ class Application:
 
     def is_valid(self):
         try:
-            self.wb.current_url()
+            print(self.wb.current_url)
             return True
         except:
             return False
