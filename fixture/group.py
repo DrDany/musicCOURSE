@@ -15,15 +15,17 @@ class GroupHelper:
 
     def fill_form(self, group):
         wd = self.app.wb
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.group_name)
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.group_header)
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.group_footer)
+        self.change_field_value(field_name="group_name", text=group.group_name)
+        self.change_field_value(field_name="group_header", text=group.group_header)
+        self.change_field_value(field_name="group_footer", text=group.group_footer)
+
+
+    def change_field_value(self, field_name, text):
+        wd = self.app.wb
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            wd.find_element_by_name(field_name).clear()
+            wd.find_element_by_name(field_name).send_keys(text)
 
     def submit_create(self):
         wd = self.app.wb
@@ -33,15 +35,21 @@ class GroupHelper:
         wd = self.app.wb
         wd.find_element_by_name("update").click()
 
+    def modify_first_group(self, new_group_data):
+        wd = self.app.wb
+        self.app.open_group_page()
+        self.select_first_group()
+        # open group
+        wd.find_element_by_name("edit").click()
+        self.fill_form(new_group_data)
+        self.submit_edit()
 
     def delete_first_group(self):
         wd = self.app.wb
         self.app.open_group_page()
-        wd.find_element_by_name("selected[]").click()
+        self.select_first_group()
         wd.find_element_by_name("delete").click()
 
-    def open_edit_form_for_first(self):
+    def select_first_group(self):
         wd = self.app.wb
-        self.app.open_group_page()
         wd.find_element_by_name("selected[]").click()
-        wd.find_element_by_name("edit").click()
