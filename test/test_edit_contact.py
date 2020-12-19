@@ -4,7 +4,6 @@ from model.contact import Contact
 
 
 def test_edit_contact(app):
-    app.session.login(username="admin", password="secret")
     app.open_home_page()
     app.contact.open_edit_form()
     app.contact.fill_form(Contact(firstname="test_edit", middle_name="name", last_name="name",
