@@ -15,6 +15,15 @@ class Application:
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
 
+
+    def is_valid(self):
+        try:
+            self.wb.current_url()
+            return True
+        except:
+            return False
+
+
     def open_group_page(self):
         wd = self.wb
         wd.get("http://localhost/addressbook/group.php")
