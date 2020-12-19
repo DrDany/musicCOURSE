@@ -7,7 +7,7 @@ def test_edit_contact(app):
     app.session.login(username="admin", password="secret")
     app.open_home_page()
     app.contact.open_edit_form()
-    app.contact.edit(Contact(firstname="test_edit", middle_name="name", last_name="name",
+    app.contact.fill_form(Contact(firstname="test_edit", middle_name="name", last_name="name",
                                nickname="nickname", company="company", home="home", mobile_phone="321",
                                work="work",
                                fax="fax", homepage="homepage", bday="4", bmonth="January", byear="1990",
